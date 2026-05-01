@@ -1,0 +1,102 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="cafe_world">
+
+    <physics type="ode">
+      <real_time_update_rate>1000.0</real_time_update_rate>
+      <max_step_size>0.001</max_step_size>
+    </physics>
+
+    <include><uri>model://sun</uri></include>
+    <include><uri>model://ground_plane</uri></include>
+
+    <!-- 벽 -->
+    <model name="wall_south"><static>true</static><pose>0 -5 1 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>10 0.2 2</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>10 0.2 2</size></box></geometry></visual>
+      </link></model>
+
+    <model name="wall_north"><static>true</static><pose>0 5 1 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>10 0.2 2</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>10 0.2 2</size></box></geometry></visual>
+      </link></model>
+
+    <model name="wall_west"><static>true</static><pose>-5 0 1 0 0 1.5708</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>10 0.2 2</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>10 0.2 2</size></box></geometry></visual>
+      </link></model>
+
+    <model name="wall_east"><static>true</static><pose>5 0 1 0 0 1.5708</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>10 0.2 2</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>10 0.2 2</size></box></geometry></visual>
+      </link></model>
+
+    <!-- 카운터 -->
+    <model name="counter"><static>true</static><pose>0 4 0.45 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>3 0.8 0.9</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>3 0.8 0.9</size></box></geometry>
+          <material><ambient>0.6 0.4 0.2 1</ambient></material></visual>
+      </link></model>
+
+    <!-- 테이블 1 -->
+    <model name="table_1"><static>true</static><pose>-2 2 0.38 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.0 1.0 0.75</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.0 1.0 0.75</size></box></geometry>
+          <material><ambient>0.8 0.6 0.4 1</ambient></material></visual>
+      </link></model>
+
+    <!-- 테이블 1 위 컵 -->
+    <model name="cup_table1"><static>true</static><pose>-2 2 0.83 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><cylinder><radius>0.04</radius><length>0.1</length></cylinder></geometry></collision>
+        <visual name="v"><geometry><cylinder><radius>0.04</radius><length>0.1</length></cylinder></geometry>
+          <material><ambient>1 1 1 1</ambient></material></visual>
+      </link></model>
+
+    <!-- 테이블 2 -->
+    <model name="table_2"><static>true</static><pose>2 2 0.38 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.0 1.0 0.75</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.0 1.0 0.75</size></box></geometry>
+          <material><ambient>0.8 0.6 0.4 1</ambient></material></visual>
+      </link></model>
+
+    <!-- 테이블 3 -->
+    <model name="table_3"><static>true</static><pose>-2 -2 0.38 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.0 1.0 0.75</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.0 1.0 0.75</size></box></geometry>
+          <material><ambient>0.8 0.6 0.4 1</ambient></material></visual>
+      </link></model>
+
+    <!-- 테이블 3 위 가방 -->
+    <model name="backpack_table3"><static>true</static><pose>-2 -2 0.85 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.3 0.15 0.4</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>0.3 0.15 0.4</size></box></geometry>
+          <material><ambient>0.2 0.2 0.8 1</ambient></material></visual>
+      </link></model>
+
+    <!-- 테이블 4 -->
+    <model name="table_4"><static>true</static><pose>2 -2 0.38 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>1.0 1.0 0.75</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>1.0 1.0 0.75</size></box></geometry>
+          <material><ambient>0.8 0.6 0.4 1</ambient></material></visual>
+      </link></model>
+
+    <!-- TurtleBot3 -->
+    <include>
+      <uri>model://turtlebot3_burger</uri>
+      <name>turtlebot3_burger</name>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+
+  </world>
+</sdf>
