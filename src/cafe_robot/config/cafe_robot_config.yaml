@@ -1,0 +1,23 @@
+yolo:
+  model_path: "yolov8n.pt"
+  confidence: 0.5
+  camera_topic: "/camera/image_raw"
+
+thresholds:
+  cup: 6
+  bottle: 6
+  backpack: 3
+  handbag: 3
+  suitcase: 3
+  laptop: 3
+  cell phone: 4
+  book: 4
+  default: 3
+
+navigation:
+  patrol_interval: 10.0
+  wait_at_table: 3.0
+
+state_manager:
+  num_tables: 4
+  cycle_gap_tolerance: 1

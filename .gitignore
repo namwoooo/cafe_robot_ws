@@ -1,0 +1,22 @@
+# ROS2 빌드 산출물
+build/
+install/
+log/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# YOLO 모델 (용량 큼, 별도 다운로드)
+*.pt
+*.onnx
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
