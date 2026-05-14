@@ -24,6 +24,7 @@ install(PROGRAMS
 install(DIRECTORY launch/ DESTINATION share/${PROJECT_NAME}/launch)
 install(DIRECTORY config/ DESTINATION share/${PROJECT_NAME}/config)
 install(DIRECTORY worlds/ DESTINATION share/${PROJECT_NAME}/worlds)
+install(DIRECTORY urdf/ DESTINATION share/${PROJECT_NAME}/urdf)
 install(DIRECTORY models/ DESTINATION share/${PROJECT_NAME}/models)
 
 if(BUILD_TESTING)

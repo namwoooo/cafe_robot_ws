@@ -91,12 +91,21 @@
           <material><ambient>0.8 0.6 0.4 1</ambient></material></visual>
       </link></model>
 
-    <!-- TurtleBot3 -->
-    <include>
-      <uri>model://turtlebot3_burger</uri>
-      <name>turtlebot3_burger</name>
-      <pose>0 0 0 0 0 0</pose>
-    </include>
+    <!-- 카메라 달기 -->
+    <sensor name="camera" type="camera">
+      <camera>
+        <horizontal_fov>1.047</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+        </image>
+      </camera>
+      <plugin name="camera_plugin" filename="libgazebo_ros_camera.so">
+        <ros>
+          <remapping>image_raw:=/camera/image_raw</remapping>
+        </ros>
+      </plugin>
+    </sensor>
 
   </world>
 </sdf>
