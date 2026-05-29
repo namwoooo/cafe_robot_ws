@@ -20,12 +20,15 @@ install(PROGRAMS
   cafe_robot/navigation_node.py
   DESTINATION lib/${PROJECT_NAME}
 )
+install(DIRECTORY behavior_trees/
+  DESTINATION share/${PROJECT_NAME}/behavior_trees)
 
 install(DIRECTORY launch/ DESTINATION share/${PROJECT_NAME}/launch)
 install(DIRECTORY config/ DESTINATION share/${PROJECT_NAME}/config)
 install(DIRECTORY worlds/ DESTINATION share/${PROJECT_NAME}/worlds)
 install(DIRECTORY urdf/ DESTINATION share/${PROJECT_NAME}/urdf)
 install(DIRECTORY models/ DESTINATION share/${PROJECT_NAME}/models)
+install(DIRECTORY maps/ DESTINATION share/${PROJECT_NAME}/maps)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
