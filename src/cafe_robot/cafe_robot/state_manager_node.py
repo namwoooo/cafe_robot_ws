@@ -14,26 +14,33 @@ OBJECT_THRESHOLDS = {
     'umbrella': 3, 'default': 3,
 }
 PERSON_CLASS = 'person'
+ALERT_COOLDOWN = 3  # 알림 후 N 사이클 대기 후 재알림
 
 def get_threshold(class_name):
     return OBJECT_THRESHOLDS.get(class_name, OBJECT_THRESHOLDS['default'])
 
 @dataclass
 class ObjectState:
-    track_id: int
     class_name: str
     count: int = 0
     last_seen_cycle: int = 0
     alerted: bool = False
+    alert_cycle: int = 0  # 마지막 알림을 보낸 cycle
 
 @dataclass
 class TableState:
     table_id: int
-    objects: Dict[int, ObjectState] = field(default_factory=dict)
+    objects: Dict[str, ObjectState] = field(default_factory=dict)
 
-    def abandoned_objects(self):
-        return [o for o in self.objects.values()
-                if not o.alerted and o.count >= get_threshold(o.class_name)]
+    def abandoned_objects(self, current_cycle: int):
+        result = []
+        for o in self.objects.values():
+            if o.count < get_threshold(o.class_name):
+                continue
+            # 알림을 한 번도 안 보냈거나 cooldown이 지났으면 알림
+            if not o.alerted or (current_cycle - o.alert_cycle >= ALERT_COOLDOWN):
+                result.append(o)
+        return result
 
 
 class StateManagerNode(Node):
@@ -56,13 +63,13 @@ class StateManagerNode(Node):
         self.alert_pub = self.create_publisher(String, '/alert/abandoned', 10)
         self.state_pub = self.create_publisher(String, '/state/summary', 10)
 
-        self.get_logger().info('StateManagerNode initialized')
+        self.get_logger().info(
+            f'StateManagerNode initialized (alert_cooldown={ALERT_COOLDOWN} cycles)')
 
     def nav_event_callback(self, msg):
         try:
             event = json.loads(msg.data)
-        except Exception as e:
-            self.get_logger().error(f'JSON error: {e}')
+        except:
             return
 
         event_type = event.get('type')
@@ -104,67 +111,71 @@ class StateManagerNode(Node):
 
     def _update_table_state(self, table_id, detections):
         table = self.table_states[table_id]
-        current_track_ids = {d['track_id'] for d in detections}
         person_detected = any(
             d['class_name'] == PERSON_CLASS for d in detections)
 
         if person_detected:
-            self.get_logger().info(f'Table {table_id}: Person detected, skipping')
+            self.get_logger().info(
+                f'Table {table_id}: Person detected, skipping')
             return
 
+        detected_classes = set()
         for det in detections:
-            track_id = det['track_id']
             class_name = det['class_name']
             if class_name == PERSON_CLASS:
                 continue
+            detected_classes.add(class_name)
 
-            if track_id not in table.objects:
-                table.objects[track_id] = ObjectState(
-                    track_id=track_id,
+            if class_name not in table.objects:
+                table.objects[class_name] = ObjectState(
                     class_name=class_name,
                     count=0,
                     last_seen_cycle=self.current_cycle,
                 )
 
-            obj = table.objects[track_id]
+            obj = table.objects[class_name]
             cycle_diff = self.current_cycle - obj.last_seen_cycle
 
             if cycle_diff <= 1:
                 obj.count += 1
                 obj.last_seen_cycle = self.current_cycle
                 self.get_logger().info(
-                    f'Table {table_id} | [{track_id}]{class_name} '
+                    f'Table {table_id} | {class_name} '
                     f'count={obj.count}/{get_threshold(class_name)}')
             else:
                 obj.count = 1
                 obj.last_seen_cycle = self.current_cycle
+                obj.alerted = False  # 오랫동안 없다가 다시 나타나면 알림 초기화
                 self.get_logger().info(
-                    f'Table {table_id} | [{track_id}]{class_name} reset '
+                    f'Table {table_id} | {class_name} reset '
                     f'(cycle gap={cycle_diff})')
 
-        for track_id in list(table.objects.keys()):
-            if track_id not in current_track_ids:
-                obj = table.objects[track_id]
+        # 감지 안 된 클래스 제거
+        for class_name in list(table.objects.keys()):
+            if class_name not in detected_classes:
+                obj = table.objects[class_name]
                 if self.current_cycle - obj.last_seen_cycle > 1:
-                    del table.objects[track_id]
+                    del table.objects[class_name]
 
     def _publish_all_alerts(self):
         alerts = []
         for table_id, table in self.table_states.items():
-            abandoned = table.abandoned_objects()
+            abandoned = table.abandoned_objects(self.current_cycle)
             if abandoned:
                 alerts.append({
                     'table_id': table_id,
                     'objects': [
-                        {'track_id': o.track_id,
-                         'class_name': o.class_name,
-                         'count': o.count}
+                        {'class_name': o.class_name, 'count': o.count}
                         for o in abandoned
                     ]
                 })
                 for obj in abandoned:
                     obj.alerted = True
-                    obj.count = 0
+                    obj.alert_cycle = self.current_cycle
+                    # count는 초기화하지 않고 유지 (계속 쌓임)
+                    self.get_logger().info(
+                        f'Table {table_id} | {obj.class_name} alert sent '
+                        f'(next alert after cycle {self.current_cycle + ALERT_COOLDOWN})')
 
         if alerts:
             msg = String()
@@ -180,8 +191,11 @@ class StateManagerNode(Node):
     def _publish_state_summary(self):
         summary = {
             tid: [
-                {'track_id': o.track_id, 'class': o.class_name,
-                 'count': o.count, 'threshold': get_threshold(o.class_name)}
+                {'class': o.class_name,
+                 'count': o.count,
+                 'threshold': get_threshold(o.class_name),
+                 'alerted': o.alerted,
+                 'alert_cycle': o.alert_cycle}
                 for o in t.objects.values()
             ]
             for tid, t in self.table_states.items()

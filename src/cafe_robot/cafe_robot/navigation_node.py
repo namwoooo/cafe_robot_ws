@@ -31,10 +31,10 @@ class Waypoint:
 
 WAYPOINTS: List[Waypoint] = [
     Waypoint(name='counter', x=0.0,  y=0.0,  yaw=0.0,   is_counter=True),
-    Waypoint(name='table_1', x=-2.0, y=2.0,  yaw=-1.57, table_id=1),
-    Waypoint(name='table_2', x=2.0,  y=2.0,  yaw=-1.57, table_id=2),
-    Waypoint(name='table_3', x=-2.0, y=-2.0, yaw=1.57,  table_id=3),
-    Waypoint(name='table_4', x=2.0,  y=-2.0, yaw=1.57,  table_id=4),
+    Waypoint(name='table_1', x=-1.5, y=1.5,  yaw=-1.57, table_id=1),
+    Waypoint(name='table_2', x=1.5,  y=1.5,  yaw=-1.57, table_id=2),
+    Waypoint(name='table_3', x=-1.5, y=-1.5, yaw=1.57,  table_id=3),
+    Waypoint(name='table_4', x=1.5,  y=-1.5, yaw=1.57,  table_id=4),
     Waypoint(name='counter', x=0.0,  y=0.0,  yaw=0.0,   is_counter=True),
 ]
 

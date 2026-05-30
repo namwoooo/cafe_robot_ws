@@ -135,11 +135,10 @@ class YoloNode(Node):
         dummy_data = {
             1: [{'class_name': 'cup', 'confidence': 0.9,
                  'bbox': [100, 100, 200, 200], 'timestamp': 0}],
-            2: [{'class_name': 'bottle', 'confidence': 0.85,
-                 'bbox': [150, 100, 250, 220], 'timestamp': 0}],
+            2: [],  # 테이블 2 물체 없
             3: [{'class_name': 'backpack', 'confidence': 0.88,
                  'bbox': [120, 80, 280, 250], 'timestamp': 0}],
-            4: [],  # 테이블 4는 물체 없음
+            4: [],  # 테이블 4 물체 없음
         }
         return dummy_data.get(self.current_table, [])
 
