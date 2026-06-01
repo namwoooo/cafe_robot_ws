@@ -421,7 +421,7 @@
       <joint_name>wheel_right_joint</joint_name>
     </plugin>      
     <link name="camera_link">
-      <pose>0.07 0 0.15 0 0 0</pose>
+      <pose>0.07 0 1.2 0 0.3 0</pose>
       <inertial>
         <mass>0.001</mass>
         <inertia><ixx>0.0001</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.0001</iyy><iyz>0</iyz><izz>0.0001</izz></inertia>
