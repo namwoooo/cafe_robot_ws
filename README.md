@@ -8,32 +8,30 @@
 TurtleBot3가 카페 내 테이블을 자율적으로 순회하며 YOLOv8을 이용해 방치된 물건을 감지하고, 일정 횟수 이상 감지되면 알림을 발행합니다.
 <br />
 
-## ROS2 Node Graph
+## 시스템 아키텍처
 
 ```mermaid
 flowchart LR
-
-    subgraph Perception
-        Camera["camera/image_raw"]
-        YOLO["YOLO Node"]
-        Tracking["Tracking Node"]
+    subgraph Perception["Perception"]
+        Camera["카메라\ncamera/image_raw"]
+        YOLO["YOLO Node\n객체 감지"]
+        Tracking["Tracking Node\n객체 추적"]
     end
 
-    subgraph Decision
-        State["State Manager"]
-        Navigation["Navigation Node"]
+    subgraph Decision["Decision"]
+        Navigation["Navigation Node\n자율 순회"]
+        State["State Manager\n방치 판단"]
     end
 
-    subgraph Alert
-        AlertNode["Alert Node"]
+    subgraph Output["Output"]
+        AlertNode["Alert Node\n한국어 알림"]
     end
 
-    Camera --> YOLO
-    YOLO -->|/yolo/detections| Tracking
-    YOLO -->|/yolo/detections| State
-    Tracking -->|/tracking/tracked_objects| State
-    Navigation -->|/navigation/event| State
-    State -->|/alert/abandoned| AlertNode
+    Camera -->|"/camera/image_raw"| YOLO
+    YOLO -->|"/yolo/detections"| Tracking
+    Tracking -->|"/tracking/tracked_objects"| State
+    Navigation -->|"/navigation/event"| State
+    State -->|"/alert/abandoned"| AlertNode
 ```
 <br />
 
