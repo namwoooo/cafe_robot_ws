@@ -14,7 +14,7 @@ OBJECT_THRESHOLDS = {
     'umbrella': 3, 'default': 3,
 }
 PERSON_CLASS = 'person'
-ALERT_COOLDOWN = 3  # 알림 후 N 사이클 대기 후 재알림
+ALERT_COOLDOWN = 3
 
 def get_threshold(class_name):
     return OBJECT_THRESHOLDS.get(class_name, OBJECT_THRESHOLDS['default'])
@@ -25,7 +25,7 @@ class ObjectState:
     count: int = 0
     last_seen_cycle: int = 0
     alerted: bool = False
-    alert_cycle: int = 0  # 마지막 알림을 보낸 cycle
+    alert_cycle: int = 0
 
 @dataclass
 class TableState:
@@ -37,7 +37,6 @@ class TableState:
         for o in self.objects.values():
             if o.count < get_threshold(o.class_name):
                 continue
-            # 알림을 한 번도 안 보냈거나 cooldown이 지났으면 알림
             if not o.alerted or (current_cycle - o.alert_cycle >= ALERT_COOLDOWN):
                 result.append(o)
         return result
@@ -54,7 +53,7 @@ class StateManagerNode(Node):
         }
         self.current_cycle = 0
         self.current_table = None
-        self.counted_this_visit = False
+        self.counted_this_visit = False  # 테이블당 한 번만 카운트
 
         self.nav_event_sub = self.create_subscription(
             String, '/navigation/event', self.nav_event_callback, 10)
@@ -80,8 +79,13 @@ class StateManagerNode(Node):
             self.counted_this_visit = False
             self.get_logger().info(f'=== Cycle {self.current_cycle} started ===')
 
-        elif event_type == 'arrived_table':
+        elif event_type == 'navigating_to_table':
             self.current_table = event.get('table_id')
+            self.counted_this_visit = False
+            self.get_logger().info(
+                f'Cycle {self.current_cycle} | Navigating to table {self.current_table} -> Detection ON')
+
+        elif event_type == 'arrived_table':
             self.counted_this_visit = False
             self.get_logger().info(
                 f'Cycle {self.current_cycle} | Arrived at table {self.current_table}')
@@ -105,25 +109,24 @@ class StateManagerNode(Node):
         if not tracked_objects:
             return
 
+        # 허용 클래스 필터링
+        filtered = [o for o in tracked_objects if o['class_name'] != PERSON_CLASS]
+        if not filtered:
+            return
+
         self.counted_this_visit = True
-        self._update_table_state(self.current_table, tracked_objects)
+        self.get_logger().info(
+            f'Cycle {self.current_cycle} | Table {self.current_table} | '
+            f'detected: {[o["class_name"] for o in filtered]}')
+        self._update_table_state(self.current_table, filtered)
         self._publish_state_summary()
 
     def _update_table_state(self, table_id, detections):
         table = self.table_states[table_id]
-        person_detected = any(
-            d['class_name'] == PERSON_CLASS for d in detections)
-
-        if person_detected:
-            self.get_logger().info(
-                f'Table {table_id}: Person detected, skipping')
-            return
 
         detected_classes = set()
         for det in detections:
             class_name = det['class_name']
-            if class_name == PERSON_CLASS:
-                continue
             detected_classes.add(class_name)
 
             if class_name not in table.objects:
@@ -145,12 +148,11 @@ class StateManagerNode(Node):
             else:
                 obj.count = 1
                 obj.last_seen_cycle = self.current_cycle
-                obj.alerted = False  # 오랫동안 없다가 다시 나타나면 알림 초기화
+                obj.alerted = False
                 self.get_logger().info(
                     f'Table {table_id} | {class_name} reset '
                     f'(cycle gap={cycle_diff})')
 
-        # 감지 안 된 클래스 제거
         for class_name in list(table.objects.keys()):
             if class_name not in detected_classes:
                 obj = table.objects[class_name]
@@ -172,7 +174,6 @@ class StateManagerNode(Node):
                 for obj in abandoned:
                     obj.alerted = True
                     obj.alert_cycle = self.current_cycle
-                    # count는 초기화하지 않고 유지 (계속 쌓임)
                     self.get_logger().info(
                         f'Table {table_id} | {obj.class_name} alert sent '
                         f'(next alert after cycle {self.current_cycle + ALERT_COOLDOWN})')

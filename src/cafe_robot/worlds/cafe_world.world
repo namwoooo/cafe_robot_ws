@@ -51,12 +51,6 @@
           <material><ambient>0.8 0.6 0.4 1</ambient></material></visual>
       </link></model>
 
-    <!-- 테이블 1 위 컵 -->
-    <include>
-	<uri>model://coffee_mug</uri>
-	<name>cup_table1</name>
-	<pose>-2 2 0.83 0 0 0</pose>
-    </include>
 
     <!-- 테이블 2 -->
     <model name="table_2"><static>true</static><pose>2 2 0.38 0 0 0</pose>
@@ -74,11 +68,12 @@
           <material><ambient>0.8 0.6 0.4 1</ambient></material></visual>
       </link></model>
 
-    <!-- 테이블 3 위 가방 -->
+    <!-- 테이블 3 위 컵 -->
     <include>
-	<uri>model://backpack</uri>
-	<name>backpack_table3</name>
-	<pose>-2 -2 0.75 0 0 0</pose>
+      <uri>model://coffee_mug</uri>
+      <name>cup_table3</name>
+      <pose>-2 -2 0.83 0 0 3.14159</pose>
+      <scale>3 3 3</scale>
     </include>
 
     <!-- 테이블 4 -->
@@ -88,6 +83,13 @@
         <visual name="v"><geometry><box><size>1.0 1.0 0.75</size></box></geometry>
           <material><ambient>0.8 0.6 0.4 1</ambient></material></visual>
       </link></model>
+
+    <!-- 테이블 4 위 가방 -->
+    <include>
+      <uri>model://backpack</uri>
+      <name>backpack_table4</name>
+      <pose>2 -2 0.75 0 0 0</pose>
+    </include>
 
     <!-- 카메라 달기 -->
     <sensor name="camera" type="camera">

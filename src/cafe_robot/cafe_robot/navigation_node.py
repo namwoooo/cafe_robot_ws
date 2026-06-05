@@ -86,6 +86,11 @@ class NavigationNode(Node):
             return
         wp = WAYPOINTS[self.current_wp_index]
         self.get_logger().info(f'Navigating to {wp.name} ({wp.x}, {wp.y})')
+        
+        # 이동 시작 시 이벤트 발행
+        if not wp.is_counter:
+            self._publish_event('navigating_to_table', cycle=self.current_cycle, table_id=wp.table_id)
+        
         if NAV2_AVAILABLE and self._nav_client:
             self._send_nav2_goal(wp)
         else:
