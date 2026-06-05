@@ -1,25 +1,41 @@
 # 카페 순찰 로봇 시스템 🤖☕
 
 카페 환경에서 방치된 물건을 감지하고 직원에게 알림을 제공하는 자율 순회 로봇 시스템입니다.
+<br />
 
 ## 프로젝트 개요
 
 TurtleBot3가 카페 내 테이블을 자율적으로 순회하며 YOLOv8을 이용해 방치된 물건을 감지하고, 일정 횟수 이상 감지되면 알림을 발행합니다.
+<br />
 
-## 시스템 아키텍처
-camera/image_raw
-│
-▼
-yolo_node ──── /yolo/detections ──── tracking_node ──── /tracking/tracked_objects
-│                                                           │
-│                                                           ▼
-│                                                   state_manager_node
-│                                                           │
-navigation_node ── /navigation/event ──────────────────────────► │
-│                                                           │
-│                                                    /alert/abandoned
-│                                                           │
-└──────────────────────────────────────────────────► alert_node
+## ROS2 Node Graph
+
+```mermaid
+flowchart LR
+
+    subgraph Perception
+        Camera["camera/image_raw"]
+        YOLO["YOLO Node"]
+        Tracking["Tracking Node"]
+    end
+
+    subgraph Decision
+        State["State Manager"]
+        Navigation["Navigation Node"]
+    end
+
+    subgraph Alert
+        AlertNode["Alert Node"]
+    end
+
+    Camera --> YOLO
+    YOLO -->|/yolo/detections| Tracking
+    YOLO -->|/yolo/detections| State
+    Tracking -->|/tracking/tracked_objects| State
+    Navigation -->|/navigation/event| State
+    State -->|/alert/abandoned| AlertNode
+```
+<br />
 
 ## 기술 스택
 
@@ -29,6 +45,7 @@ navigation_node ── /navigation/event ─────────────
 - **Nav2** - 자율 주행
 - **YOLOv8n** - 객체 감지
 - **Python 3.10**
+<br />
 
 ## 노드 설명
 
@@ -37,6 +54,7 @@ navigation_node ── /navigation/event ─────────────
 | `navigation_node` | Nav2 기반 웨이포인트 자율 순회 |
 | `yolo_node` | YOLOv8을 이용한 실시간 객체 감지 |
 | `tracking_node` | IoU 기반 객체 추적 (SimpleTracker) |
+| `table_mapping_node` | 웨이포인트 기반 테이블 매핑 |
 | `state_manager_node` | 방치 판단 및 알림 트리거 |
 | `alert_node` | 한국어 알림 출력 |
 
@@ -48,12 +66,14 @@ navigation_node ── /navigation/event ─────────────
 | 배낭, 가방, 여행가방 | 3회 |
 | 노트북 | 3회 |
 | 휴대폰, 책 | 4회 |
+<br />
 
 ## 알림 정책
 
 - 임계값 초과 시 해당 cycle의 counter 도착 후 즉시 알림 발행
 - 알림 후 **3 사이클** 동안 재알림 억제 (alert cooldown)
 - 직원이 물건을 치운 경우(빈 테이블로 감지) 자동으로 카운트 초기화
+<br />
 
 ## 환경 구성
 
@@ -67,6 +87,7 @@ sudo apt install ros-humble-turtlebot3* ros-humble-nav2*
 pip install ultralytics
 pip install 'numpy<2'
 ```
+<br />
 
 ### 빌드
 
@@ -75,6 +96,7 @@ cd ~/cafe_robot_ws
 colcon build --symlink-install
 source install/setup.bash
 ```
+<br />
 
 ## 실행 방법
 
@@ -89,12 +111,14 @@ export LIBGL_ALWAYS_SOFTWARE=1
 export GALLIUM_DRIVER=llvmpipe
 ros2 launch cafe_robot cafe_world_launch.py
 ```
+<br />
 
 ### 2. Nav2 실행
 
 ```bash
 ros2 launch cafe_robot nav2_launch.py
 ```
+<br />
 
 ### 3. 초기 위치 설정
 
@@ -111,6 +135,7 @@ ros2 topic pub -t 3 --rate 5 /initialpose geometry_msgs/msg/PoseWithCovarianceSt
   }
 }'
 ```
+<br />
 
 ### 4. 전체 노드 실행
 
@@ -130,6 +155,7 @@ ros2 run cafe_robot alert_node.py
 # 자율 순회
 python3 ~/cafe_robot_ws/src/cafe_robot/cafe_robot/navigation_node.py
 ```
+<br />
 
 ## 카페 환경
 
@@ -137,7 +163,7 @@ python3 ~/cafe_robot_ws/src/cafe_robot/cafe_robot/navigation_node.py
 - 테이블 3 (-2, -2): 머그컵
 - 테이블 4 (2, -2): 배낭
 
-## 웨이포인트
+## WayPoint
 
 | 위치 | 좌표 |
 |------|------|
@@ -146,6 +172,7 @@ python3 ~/cafe_robot_ws/src/cafe_robot/cafe_robot/navigation_node.py
 | 테이블 2 | (1.5, 1.5) |
 | 테이블 3 | (-1.5, -1.5) |
 | 테이블 4 | (1.5, -1.5) |
+<br />
 
 ## 개발 환경
 
