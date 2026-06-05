@@ -66,7 +66,8 @@
         <collision name="c"><geometry><box><size>1.0 1.0 0.75</size></box></geometry></collision>
         <visual name="v"><geometry><box><size>1.0 1.0 0.75</size></box></geometry>
           <material><ambient>0.8 0.6 0.4 1</ambient></material></visual>
-      </link></model>
+      </link>
+    </model>
 
     <!-- 테이블 3 위 컵 -->
     <include>
@@ -82,7 +83,8 @@
         <collision name="c"><geometry><box><size>1.0 1.0 0.75</size></box></geometry></collision>
         <visual name="v"><geometry><box><size>1.0 1.0 0.75</size></box></geometry>
           <material><ambient>0.8 0.6 0.4 1</ambient></material></visual>
-      </link></model>
+      </link>
+    </model>
 
     <!-- 테이블 4 위 가방 -->
     <include>
@@ -91,7 +93,7 @@
       <pose>2 -2 0.75 0 0 0</pose>
     </include>
 
-    <!-- 카메라 달기 -->
+    <!-- 카메라 -->
     <sensor name="camera" type="camera">
       <camera>
         <horizontal_fov>1.047</horizontal_fov>

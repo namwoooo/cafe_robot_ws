@@ -13,7 +13,7 @@ try:
 except ImportError:
     YOLO_AVAILABLE = False
 
-# 감지할 클래스만 허용
+# 감지를 허용할 클래스
 ALLOWED_CLASSES = {
     'cup', 'bottle', 'wine glass', 'backpack',
     'handbag', 'suitcase', 'laptop', 'cell phone',

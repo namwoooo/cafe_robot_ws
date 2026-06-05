@@ -29,6 +29,7 @@ class Waypoint:
     is_counter: bool = False
     table_id: int = -1
 
+# waypoint 설정
 WAYPOINTS: List[Waypoint] = [
     Waypoint(name='counter', x=0.0,  y=0.0,  yaw=0.0,   is_counter=True),
     Waypoint(name='table_1', x=-1.5, y=1.5,  yaw=-1.57, table_id=1),
@@ -87,7 +88,7 @@ class NavigationNode(Node):
         wp = WAYPOINTS[self.current_wp_index]
         self.get_logger().info(f'Navigating to {wp.name} ({wp.x}, {wp.y})')
         
-        # 이동 시작 시 이벤트 발행
+        # 다음 테이블로 이동 시작 시 이벤트 발행
         if not wp.is_counter:
             self._publish_event('navigating_to_table', cycle=self.current_cycle, table_id=wp.table_id)
         

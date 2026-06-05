@@ -53,7 +53,7 @@ class StateManagerNode(Node):
         }
         self.current_cycle = 0
         self.current_table = None
-        self.counted_this_visit = False  # 테이블당 한 번만 카운트
+        self.counted_this_visit = False  # 테이블당 한 번만 카운트하도록 설정
 
         self.nav_event_sub = self.create_subscription(
             String, '/navigation/event', self.nav_event_callback, 10)
