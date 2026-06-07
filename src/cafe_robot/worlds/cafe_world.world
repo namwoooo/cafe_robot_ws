@@ -44,28 +44,84 @@
       </link></model>
 
     <!-- 테이블 1 -->
-    <model name="table_1"><static>true</static><pose>-2 2 0.38 0 0 0</pose>
+    <model name="table_1">
+      <static>true</static>
+      <pose>-2 2 0 0 0 0</pose>
       <link name="link">
-        <collision name="c"><geometry><box><size>1.0 1.0 0.75</size></box></geometry></collision>
-        <visual name="v"><geometry><box><size>1.0 1.0 0.75</size></box></geometry>
-          <material><ambient>0.8 0.6 0.4 1</ambient></material></visual>
-      </link></model>
+        <collision name="surface">
+          <pose>0 0 0.38 0 0 0</pose>
+          <geometry><box><size>0.913 0.913 0.76</size></box></geometry>
+        </collision>
+        <collision name="column">
+          <pose>0 0 0.37 0 0 0</pose>
+          <geometry><box><size>0.042 0.042 0.74</size></box></geometry>
+        </collision>
+        <collision name="base">
+          <pose>0 0 0.02 0 0 0</pose>
+          <geometry><box><size>0.56 0.56 0.04</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>/home/namwookim/.gazebo/models/cafe_table/meshes/cafe_table.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
 
 
     <!-- 테이블 2 -->
-    <model name="table_2"><static>true</static><pose>2 2 0.38 0 0 0</pose>
+    <model name="table_2">
+      <static>true</static>
+      <pose>2 2 0 0 0 0</pose>
       <link name="link">
-        <collision name="c"><geometry><box><size>1.0 1.0 0.75</size></box></geometry></collision>
-        <visual name="v"><geometry><box><size>1.0 1.0 0.75</size></box></geometry>
-          <material><ambient>0.8 0.6 0.4 1</ambient></material></visual>
-      </link></model>
+        <collision name="surface">
+          <pose>0 0 0.38 0 0 0</pose>
+          <geometry><box><size>0.913 0.913 0.76</size></box></geometry>
+        </collision>
+        <collision name="column">
+          <pose>0 0 0.37 0 0 0</pose>
+          <geometry><box><size>0.042 0.042 0.74</size></box></geometry>
+        </collision>
+        <collision name="base">
+          <pose>0 0 0.02 0 0 0</pose>
+          <geometry><box><size>0.56 0.56 0.04</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>/home/namwookim/.gazebo/models/cafe_table/meshes/cafe_table.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
 
     <!-- 테이블 3 -->
-    <model name="table_3"><static>true</static><pose>-2 -2 0.38 0 0 0</pose>
+    <model name="table_3">
+      <static>true</static>
+      <pose>-2 -2 0 0 0 0</pose>
       <link name="link">
-        <collision name="c"><geometry><box><size>1.0 1.0 0.75</size></box></geometry></collision>
-        <visual name="v"><geometry><box><size>1.0 1.0 0.75</size></box></geometry>
-          <material><ambient>0.8 0.6 0.4 1</ambient></material></visual>
+        <collision name="surface">
+          <pose>0 0 0.38 0 0 0</pose>
+          <geometry><box><size>0.913 0.913 0.76</size></box></geometry>
+        </collision>
+        <collision name="column">
+          <pose>0 0 0.37 0 0 0</pose>
+          <geometry><box><size>0.042 0.042 0.74</size></box></geometry>
+        </collision>
+        <collision name="base">
+          <pose>0 0 0.02 0 0 0</pose>
+          <geometry><box><size>0.56 0.56 0.04</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>/home/namwookim/.gazebo/models/cafe_table/meshes/cafe_table.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
       </link>
     </model>
 
@@ -77,12 +133,37 @@
       <scale>3 3 3</scale>
     </include>
 
+    <!-- 테이블 3 사람 -->
+    <include>
+      <uri>model://standing_person</uri>
+      <name>person_table3</name>
+      <pose>-2 -2.8 0 0 0 2.0</pose>
+    </include>
+
     <!-- 테이블 4 -->
-    <model name="table_4"><static>true</static><pose>2 -2 0.38 0 0 0</pose>
+    <model name="table_4">
+      <static>true</static>
+      <pose>2 -2 0 0 0 0</pose>
       <link name="link">
-        <collision name="c"><geometry><box><size>1.0 1.0 0.75</size></box></geometry></collision>
-        <visual name="v"><geometry><box><size>1.0 1.0 0.75</size></box></geometry>
-          <material><ambient>0.8 0.6 0.4 1</ambient></material></visual>
+        <collision name="surface">
+          <pose>0 0 0.38 0 0 0</pose>
+          <geometry><box><size>0.913 0.913 0.76</size></box></geometry>
+        </collision>
+        <collision name="column">
+          <pose>0 0 0.37 0 0 0</pose>
+          <geometry><box><size>0.042 0.042 0.74</size></box></geometry>
+        </collision>
+        <collision name="base">
+          <pose>0 0 0.02 0 0 0</pose>
+          <geometry><box><size>0.56 0.56 0.04</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>/home/namwookim/.gazebo/models/cafe_table/meshes/cafe_table.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
       </link>
     </model>
 

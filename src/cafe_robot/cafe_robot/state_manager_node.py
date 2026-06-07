@@ -109,7 +109,12 @@ class StateManagerNode(Node):
         if not tracked_objects:
             return
 
-        # 허용 클래스 필터링
+        # 사람이 감지되면 count x
+        person_detected = any(o['class_name'] == PERSON_CLASS for o in tracked_objects)
+        if person_detected:
+            self.counted_this_visit = True
+            return
+        
         filtered = [o for o in tracked_objects if o['class_name'] != PERSON_CLASS]
         if not filtered:
             return
