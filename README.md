@@ -45,7 +45,7 @@ flowchart LR
 - **ROS2 Humble**
 - **Gazebo Classic 11** - 시뮬레이션 환경
 - **TurtleBot3 Burger** - 로봇 플랫폼
-- **Nav2** - 자율 주행
+- **Nav2** - Waypoint 기반 주행
 - **YOLOv8n** - 객체 감지
 - **Python 3.10**
 <br />
@@ -54,12 +54,12 @@ flowchart LR
 
 | 노드 | 역할 |
 |------|------|
-| `navigation_node` | Nav2 기반 웨이포인트 자율 순회 |
+| `navigation_node` | Nav2 기반 웨이포인트 순회 |
 | `yolo_node` | YOLOv8을 이용한 실시간 객체 감지 |
 | `tracking_node` | IoU 기반 객체 추적 (SimpleTracker) |
 | `table_mapping_node` | 웨이포인트 기반 테이블 매핑 |
 | `state_manager_node` | 방치 판단 및 알림 트리거 |
-| `alert_node` | 한국어 알림 출력 |
+| `alert_node` | 알림 출력 |
 
 ## 감지 가능 물체 및 방치 임계값
 
@@ -170,7 +170,7 @@ python3 ~/cafe_robot_ws/src/cafe_robot/cafe_robot/navigation_node.py
 
 | 위치 | 좌표 |
 |------|------|
-| 카운터 | (0.0, 0.0) |
+| 홈(출발 지점) | (0.0, 0.0) |
 | 테이블 1 | (-1.5, 1.5) |
 | 테이블 2 | (1.5, 1.5) |
 | 테이블 3 | (-1.5, -1.5) |
@@ -184,20 +184,6 @@ python3 ~/cafe_robot_ws/src/cafe_robot/cafe_robot/navigation_node.py
 - Python 3.10
 <br />
 
-## AI 사용 여부
-
-### AI Tool
-- Claude
-
-### Usage
-- ROS2 topic 및 node 구조 설계 아이디어 검토
-- Tracking 알고리즘 구현 방법 조사
-- 코드 디버깅 및 에러 상황 분석
-- README 작성 보조
-
-AI는 코드 작성 및 설계 과정에서 큰 틀 설계, 참고 자료와 디버깅 도구로 활용하고 상세 기능 구현, 테스트 및 검증은 예시 코드를 참고하여 직접 수행하였다.
-<br />
-
 ## 참고 자료
 
 - [ROS2 Humble 공식 문서](https://docs.ros.org/en/humble/)
@@ -208,7 +194,5 @@ AI는 코드 작성 및 설계 과정에서 큰 틀 설계, 참고 자료와 디
 <br />
 
 ## Youtube Link
+[youtube_link](https://youtu.be/a_p1IvYfmFo)
 <br />
-
-## Github Link
-[github link](https://github.com/namwoooo/cafe_robot_ws)
