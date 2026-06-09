@@ -86,7 +86,6 @@ class StateManagerNode(Node):
                 f'Cycle {self.current_cycle} | Navigating to table {self.current_table} -> Detection ON')
 
         elif event_type == 'arrived_table':
-            self.counted_this_visit = False
             self.get_logger().info(
                 f'Cycle {self.current_cycle} | Arrived at table {self.current_table}')
 
