@@ -194,5 +194,5 @@ python3 ~/cafe_robot_ws/src/cafe_robot/cafe_robot/navigation_node.py
 <br />
 
 ## Youtube Link
-[youtube_link]([https://youtu.be/a_p1IvYfmFo](https://youtu.be/QFCUIRvmi4I))
+[youtube_link]([https://youtu.be/a_p1IvYfmFo](https://youtu.be/QFCUIRvmi4I)
 <br />
